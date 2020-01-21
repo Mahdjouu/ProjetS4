@@ -1,0 +1,14 @@
+.PHONY: all clean
+CC = gcc
+CFLAGS = -Wall -std=c99
+LDFLAGS = -lgmp
+OBJFILES = tests-base64.o other_base64.o int2char.o
+TARGET = tests-base64
+
+all: $(TARGET)
+
+$(TARGET): $(OBJFILES)
+	$(CC) $(CFLAGS) -o $(TARGET) $(OBJFILES) $(LDFLAGS)
+
+clean:
+	rm -f $(OBJFILES) $(TARGET) *~
