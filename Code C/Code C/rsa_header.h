@@ -10,8 +10,8 @@
 #include <stdbool.h>
 #include <assert.h>
 #include <time.h>
-#include "Sha-256/sha256_utils.h"
-#include <gmp.h>
+#include "Sha-256/Sha-256/sha256_utils.h"
+/*#include <gmp.h>*/
 
 #define MAX_U_INT 4294967296
 #define MAX_U_INT64 18446744073709551616
