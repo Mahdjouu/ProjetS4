@@ -24,10 +24,23 @@ long bezout(uint a,uint b,long *u,long *v){
 /// \returns r entier
  	long r = a;
 	long rp = b;
+  *u = 1;
+  *v = 0;
 	long up = 0;
 	long vp = 1;
 	long rs,vs,us,q;
- 	// à développer
+ 	while (rp != 0){
+    q = r / rp;
+    rs = r;
+    us = *u;
+    vs = *v;
+    r = rp;
+    *u = up;
+    *v = vp;
+    rp = rs - (q * rp);
+    up = us - (q * up);
+    vp = vs - (q * vp);
+   }
 	return r;
 }
 
