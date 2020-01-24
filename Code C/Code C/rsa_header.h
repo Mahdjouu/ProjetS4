@@ -11,7 +11,7 @@
 #include <assert.h>
 #include <time.h>
 #include "Sha-256/Sha-256/sha256_utils.h"
-/*#include <gmp.h>*/
+#include <gmp.h>
 
 #define MAX_U_INT 4294967296
 #define MAX_U_INT64 18446744073709551616
@@ -53,6 +53,7 @@ typedef struct keyPair_s {
 
 // prototypes de sp
 void erreur(char* msg); // pour afficher les msg d'erreurs
+uint pgcdFast(uint a,uint b) // permet de calculer rapidement le PGCD de a et b
 
 // phase 1
 int decompose (uint facteur[], uint64 n) ; // reçoit n, remplit le tableau de facteurs premiers (realloc)
