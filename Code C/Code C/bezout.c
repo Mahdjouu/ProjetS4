@@ -30,6 +30,8 @@ long bezout(uint a,uint b,long *u,long *v){
 	long vp = 1;
 	long rs,vs,us,q;
  	while (rp != 0){
+    assert(r = a*(*u) + b*(*v));
+    assert(rp = a * up + b * vp);
     q = r / rp;
     rs = r;
     us = *u;

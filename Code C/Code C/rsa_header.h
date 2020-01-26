@@ -53,7 +53,17 @@ typedef struct keyPair_s {
 
 // prototypes de sp
 void erreur(char* msg); // pour afficher les msg d'erreurs
+uint random_uint(uint min,uint max);
+int premier (uint n);
+int decompose (uint facteur[], uint64 n);
+uint puissance(uint a, uint e);
+uint64 puissance_mod_n (uint64 a, uint64 e, uint64 n);
+uint genereUint(uint max,int *cpt);
+int rabin (uint a, uint n);
+uint genereUintRabin(uint max,int *cpt);
 uint pgcdFast(uint a,uint b); // permet de calculer rapidement le PGCD de a et b
+void genKeysRabin(rsaKey_t *pubKey,rsaKey_t *privKey);
+void inputKey(uint64 E,uint64 N,rsaKey_t *key);
 
 // phase 1
 int decompose (uint facteur[], uint64 n) ; // reçoit n, remplit le tableau de facteurs premiers (realloc)
