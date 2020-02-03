@@ -1,0 +1,12 @@
+Petite mise au point...
+tailles : int=4 ; long long=8 ; uint=4
+NB->B64 : nb=123456789->b64=Fc1bBw== nbcar==8 ; B64->NB : nb=123456789
+
+
+tab->uint=1684234849 ; uint->b64=YWJjZA==, nbcar=8
+b64->uint=1684234849 ;  int->tabcar=abcd
+Avec des uint64 
+
+
+tab->uint=1684234849 ; uint->b64=YWJjZAAAAAA=, nbcar=12
+b64->uint=1684234849 ;  int->tabcar=abcd
