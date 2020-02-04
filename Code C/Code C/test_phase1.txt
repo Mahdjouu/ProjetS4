@@ -1,0 +1,31 @@
+Validation de la factorisation
+Factorisation de 8 : 2 2 2  ** vérif : prod=8  OK
+Factorisation de 42 : 2 3 7  ** vérif : prod=42  OK
+Factorisation de 1245 : 3 5 83  ** vérif : prod=1245  OK
+Factorisation de 78954 : 2 3 13159  ** vérif : prod=78954  OK
+Factorisation de 12465 : 3 3 5 277  ** vérif : prod=12465  OK
+Factorisation de 23 : 23  ** vérif : prod=23  OK
+Factorisation de 12 : 2 2 3  ** vérif : prod=12  OK
+Factorisation de 741 : 3 13 19  ** vérif : prod=741  OK
+Factorisation de 8889895013 : 72421 122753  ** vérif : prod=8889895013  OK
+Factorisation de 3865086887 : 101 191 200357  ** vérif : prod=3865086887  OK
+
+Calcul des clefs avec num1=53 et num2=97
+U=4279
+AVANT clé privée : U=4279, N=5141
+pub key=(7,5141)
+priv key=(4279,5141)
+
+Refactorisation..
+Factorisation de 5141 :
+53 97 
+test génération de nombres premiers et de clefs (Rabin)
+num1=1237, cpt1=3
+num2=1657, cpt2=8
+N=2049709, M=2046816, C=5, U=1637453, V=1
+pub key=(5,2049709)
+priv key=(1637453,2049709)
+
+Refactorisation..
+Factorisation de 2049709 :
+1237 1657 
