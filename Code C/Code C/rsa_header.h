@@ -22,6 +22,7 @@
 #define BLOCK_BASE_64 12
 #define NAME_MAX_SIZE 32 // caractères
 #define MAX_STR 10 //
+#define MAX_BUFFER 512
 
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define MAXI(a,b) (((a)>(b))?(a):(b))
