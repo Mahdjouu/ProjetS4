@@ -1,0 +1,5 @@
+
+Calcul des paramètres des clefs avec num1=53 et num2=97
+N et M ok
+U (aka E dans zeste de savoir)=4279
+OK

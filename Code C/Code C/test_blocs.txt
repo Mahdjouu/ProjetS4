@@ -1,0 +1,3 @@
+Message avant : abcd
+msg=abcd --> nb=1684234849
+nb=1684234849 --> msg=abcd
