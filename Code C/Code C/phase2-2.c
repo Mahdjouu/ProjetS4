@@ -13,10 +13,10 @@ int main(){
 
   int nbCar;
   printf("Chiffement du message...\n");
-  RSAcryptFile("Data/msg.txt","Data/res.txt",pubKey,&nbCar);
+  RSAfile_crypt("Data/msg.txt","Data/res.txt",pubKey);
   printf("Fini, %d caractères lus\n",nbCar);
   printf("Chiffement du message...\n");
-  RSAunCryptFile("Data/res.txt","Data/msg_decrypt.txt",privKey,&nbCar);
+  RSAfile_decrypt("Data/res.txt","Data/msg_decrypt.txt",privKey);
   printf("Fini, %d caractères lus\n",nbCar);
   return 0;
 }
