@@ -37,33 +37,22 @@ void RSAfile_decrypt(char *inFilename,char *outFilename,rsaKey_t privKey){
 
 void RSAcryptFile(char *inFilename, char *outFilename, rsaKey_t pubKey, int *output_length){
     FILE * fichier = fopen(inFilename, "r");
-
     FILE * fichier2 = fopen(outFilename, "w+b");
-    
-    // unsigned char buffer[MAX_BUFFER];
-
+    unsigned char buffer[MAX_BUFFER];
     int i = 0;
-    
     uint64 cryptedBuffer[MAX_BUFFER];
-
-    char caractereActuel;
-    caractereActuel = fgetc(fichier);
-    while (caractereActuel != EOF){
-        uchar * tab4bytes = (uchar *)malloc(4*sizeof(uchar));
-        RSAcrypt(&caractereActuel, &cryptedBuffer[i], pubKey);
-        cryptedBuffer[i] = base64_encode(&cryptedBuffer[i], sizeof(uint64), output_length);
-        fwrite(cryptedBuffer[i], 1, 1, fichier2);
-        caractereActuel = fgetc(fichier);
-        free(tab4bytes);
-        i++;
-    }
-    
+    uint64 *strTest = NULL;
+    do{
+        fgets(buffer, MAX_BUFFER, fichier);
+        printf("phrase : %s\n", buffer);
+        RSAcrypt(buffer, cryptedBuffer, pubKey);
+        for (i = 0; cryptedBuffer[i] != '\0'; i++){
+            fwrite(base64_encode(&cryptedBuffer[i], sizeof(cryptedBuffer[i]), output_length), 1, sizeof(base64_encode(&cryptedBuffer[i], sizeof(cryptedBuffer[i]), output_length)), fichier2);
+        }
+    }while (!feof(fichier));
     fclose(fichier);
-    
     fclose(fichier2);
-    
     fseek(fichier, 0, SEEK_SET);
-    
     fseek(fichier2, 0, SEEK_SET);
 }
 
@@ -72,28 +61,25 @@ void RSAunCryptFile(char *inFilename,char *outFilename,rsaKey_t privKey, int len
 
     FILE * fichier = NULL;
     FILE * fichier2 = NULL;
+    int i;
     if ((fichier = fopen(inFilename, "rb")) == NULL){
         fprintf(stderr, "Erreur ouverture du fichier %s.\n", inFilename);
     }
-    if ((fichier2 = fopen(outFilename, "w")) == NULL){
+    if ((fichier2 = fopen(outFilename, "w+b")) == NULL){
         fprintf(stderr, "Erreur ouverture du fichier %s.\n", outFilename);
     }
-    uint64 *cryptedBuffer = NULL;
+    uint64 *cryptedBuffer = (uint64 *)malloc(sizeof(uint64));
     char buffer[MAX_BUFFER];
-    char buffer2[MAX_BUFFER];
     do{
-        fgets(buffer, MAX_BUFFER,fichier);
-        strpy(cryptedBuffer, base64_decode(buffer, length, &length));
-        RSAdecrypt(buffer2,cryptedBuffer, privKey);
-        fwrite(buffer2, 1, 512, fichier2);
+        fgets(cryptedBuffer, 12, fichier);
+        printf("%s\n", cryptedBuffer);
+        strcpy(cryptedBuffer, base64_decode(cryptedBuffer, length, &length));
+        RSAdecrypt(buffer, cryptedBuffer, privKey);
+        fwrite(cryptedBuffer, 1, 11, fichier2);
     }while (!feof(fichier));
-
     fclose(fichier);
-
     fclose(fichier2);
-
     fseek(fichier, 0, SEEK_SET);
-
     fseek(fichier2, 0, SEEK_SET);
 
 }

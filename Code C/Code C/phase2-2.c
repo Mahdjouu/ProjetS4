@@ -16,7 +16,7 @@ int main(){
   RSAcryptFile("Data/msg.txt","Data/res.txt",pubKey, &nbCar);
   printf("Fini, %d caractères lus\n",nbCar);
   printf("Chiffement du message...\n");
-  RSAunCryptFile("Data/res.txt","Data/msg_decrypt.txt",privKey, &nbCar);
+  RSAunCryptFile("Data/res.txt","Data/msg_decrypt.txt",privKey, nbCar);
   printf("Fini, %d caractères lus\n",nbCar);
   return 0;
 }
