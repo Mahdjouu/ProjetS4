@@ -1,38 +1,5 @@
 #include "rsa_header.h"
 
-void RSAfile_crypt(char *inFilename,char *outFilename, rsaKey_t pubKey){
-    FILE * fichier = fopen(inFilename, "r+b");
-    FILE * fichier2 = fopen(outFilename, "w+b");
-    unsigned char buffer[MAX_BUFFER];
-    uint64 cryptedBuffer[MAX_BUFFER];
-    fscanf(fichier, "%s", buffer);
-    while (!feof(fichier)){
-        RSAcrypt(buffer, cryptedBuffer, pubKey);
-        fwrite(cryptedBuffer, 1, MAX_BUFFER, fichier2);
-        fscanf(fichier, "%s", buffer);
-    }
-    fclose(fichier);
-    fclose(fichier2);
-    fseek(fichier, 0, SEEK_SET);
-}
-
-void RSAfile_decrypt(char *inFilename,char *outFilename,rsaKey_t privKey){
-    FILE * fichier = fopen(inFilename, "r+b");
-    FILE * fichier2 = fopen(outFilename, "w+b");
-    char *buffer = (char *)malloc(MAX_BUFFER*sizeof(char));
-    uint64 *cryptedBuffer = (uint64 *)malloc(MAX_BUFFER*sizeof(uint64));
-    fscanf(fichier, "%s", buffer);
-    while (!feof(fichier)){
-        RSAdecrypt((unsigned char*)buffer, cryptedBuffer, privKey);
-        fwrite((const void *)buffer, 1, strlen(buffer), fichier2);
-        fscanf(fichier, "%s", buffer);
-    }
-    fclose(fichier);
-    fclose(fichier2);
-    fseek(fichier, 0, SEEK_SET);
-    fseek(fichier2, 0, SEEK_SET);
-}
-
 // #############
 
 void RSAcryptFile(char *inFilename, char *outFilename, rsaKey_t pubKey, int *output_length){
@@ -57,10 +24,11 @@ void RSAcryptFile(char *inFilename, char *outFilename, rsaKey_t pubKey, int *out
         //free(cryptedBuffer);
         *output_length += _output_length;
     }while (!feof(fichier));
-    fclose(fichier);
-    fclose(fichier2);
+    ;
     fseek(fichier, 0, SEEK_SET);
     fseek(fichier2, 0, SEEK_SET);
+    fclose(fichier);
+    fclose(fichier2)
 }
 
 
@@ -88,8 +56,9 @@ void RSAunCryptFile(char *inFilename,char *outFilename,rsaKey_t privKey, int len
         fwrite(cDecrypt, 1, 1, fichier2);
         free(cryptedBuffer);
     }while (!feof(fichier));
-    fclose(fichier);
-    fclose(fichier2);
+
     fseek(fichier, 0, SEEK_SET);
     fseek(fichier2, 0, SEEK_SET);
+    fclose(fichier);
+    fclose(fichier2);
 }
