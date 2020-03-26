@@ -22,6 +22,7 @@
 #define BLOCK_BASE_64 12
 #define NAME_MAX_SIZE 32 // caractères
 #define MAX_STR 10 //
+#define MAX_BUFFER 512
 
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define MAXI(a,b) (((a)>(b))?(a):(b))
@@ -89,10 +90,7 @@ uint64 RSAdecrypt1BlockGmp(uint64 blockInt, rsaKey_t privKey);
 // avec les fichiers
 void RSAfile_crypt(char *inFilename,char *outFilename, rsaKey_t pubKey);
 void RSAfile_decrypt(char *inFilename,char *outFilename,rsaKey_t privKey);
-void RSAcryptFile(char *inFilename,
-                    char *outFilename,
-                    rsaKey_t pubKey,
-                    int *output_length);
+void RSAcryptFile(char *inFilename, char *outFilename, rsaKey_t pubKey, int *output_length);
 void RSAunCryptFile(char *inFilename,char *outFilename,rsaKey_t privKey, int length);
 
 // signature
