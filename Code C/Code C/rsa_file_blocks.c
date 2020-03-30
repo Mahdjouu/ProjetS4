@@ -22,13 +22,13 @@ void RSAfile_crypt(char *inFilename,char *outFilename, rsaKey_t pubKey){
     uchar buffer[5];
     uint64 cryptedBuffer;
     uint temp;
-    fgets(buffer, 5, fichier);
+    fgets((char *)buffer, 5, fichier);
     do{
         printf("buffer = %s\n", buffer);
         temp = convert_4byte2int(buffer);
         cryptedBuffer = RSAcrypt1BlockGmp(temp, pubKey);
         fprintf(fichier2, "%lu\n", cryptedBuffer);
-        fgets(buffer, 5, fichier);
+        fgets((char *)buffer, 5, fichier);
     }while (!feof(fichier));
     fseek(fichier, 0, SEEK_SET);
     fseek(fichier2, 0, SEEK_SET);

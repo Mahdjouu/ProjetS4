@@ -50,6 +50,7 @@ long bezoutRSA(uint a,uint b,long *u,long *v){
   /// \brief récupère (r,u,v) de Bézout. Si u est négatif on le remplace par
   /// \brief le premier qui est supérieur à 2
   long r = bezout(a,b,u,v);
+  r = 0;
   while (*u<=2){
     *u = *u+b;
   }

@@ -217,7 +217,7 @@ void genKeysRabin(rsaKey_t *pubKey,rsaKey_t *privKey){
   long res = bezoutRSA(C,M,&U,&V);
   assert(2<U && U<M);
   fprintf(logfp,"N=%lu, M=%lu, C=%u, U=%ld, V=%ld\n",N,M,C,U,V);
-
+  res = 0;
   pubKey->E = C;
   pubKey->N = N;
   privKey->E = U;

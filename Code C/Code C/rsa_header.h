@@ -106,5 +106,10 @@ void mersenneGmp(mpz_t resGmp,uint64 max,uint64 p); // ovni
 void printKeyPair(keyPair_t keyPair);
 char * verifySignText(char *inFilename,tabUint64_t cryptAr, rsaKey_t verifyKey);
 void puissance_mod_n_gmp(mpz_t res,uint64 a, uint64 e, uint64 n); // puis mod avec gmp
+
+// RSA COMMANDE
+
+void interpreteur_commande();
+int cut_in_words(const char * source, char ** dest);
 #endif
 
