@@ -22,12 +22,14 @@ void RSAfile_crypt(char *inFilename,char *outFilename, rsaKey_t pubKey){
     uchar buffer[5];
     uint64 cryptedBuffer;
     uint temp;
+    size_t _output_length;
     fgets(buffer, 5, fichier);
     do{
         printf("buffer = %s\n", buffer);
         temp = convert_4byte2int(buffer);
         cryptedBuffer = RSAcrypt1BlockGmp(temp, pubKey);
-        fprintf(fichier2, "%lu\n", cryptedBuffer);
+        char * buffer2 = base64_encode(&cryptedBuffer,sizeof(uint64),&_output_length);
+        fprintf(fichier2, "%s", buffer2);
         fgets(buffer, 5, fichier);
     }while (!feof(fichier));
     fseek(fichier, 0, SEEK_SET);
@@ -40,14 +42,17 @@ void RSAfile_decrypt(char *inFilename,char *outFilename,rsaKey_t privKey){
     FILE * fichier = fopen(inFilename, "r");
     FILE * fichier2 = fopen(outFilename, "w");
     uchar buffer[5];
-    uint64 cryptedBuffer;
     uint temp;
-    fscanf(fichier, "%lu", &cryptedBuffer);
+    size_t output_length;
+    char * buffer2 = malloc(12);
+    fread(buffer2, 12, 1, fichier);
     do{
+        uint64 * cryptedBuffer = base64_decode(buffer2, 12, &output_length);
+        printf("%lu\n", cryptedBuffer);
         temp = RSAdecrypt1BlockGmp(cryptedBuffer, privKey);
         convertInt2uchar(temp, buffer);
         fprintf(fichier2, "%s", buffer);
-        fscanf(fichier, "%lu", &cryptedBuffer);
+        fread(buffer2, 12, 1, fichier);
     }while (!feof(fichier));
     fclose(fichier);
     fclose(fichier2);

@@ -3,7 +3,7 @@
 void puissance_mod_n_gmp(mpz_t res,uint64 a, uint64 e, uint64 n) {
   /// /brief puissance modulaire, calcule a^e mod n
   /// avec GMP
-  assert(a<n);
+  //assert(a<n);
   mpz_t aa; // déclaration
   mpz_t ee;
   mpz_t nn;
