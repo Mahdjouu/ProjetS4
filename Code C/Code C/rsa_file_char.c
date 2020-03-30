@@ -14,13 +14,14 @@ void RSAcryptFile(char *inFilename, char *outFilename, rsaKey_t pubKey, int *out
         for (i = 0; buffer[i] != '\0'; i++){
             RSAcrypt((unsigned char*)&buffer[i], &cryptedBuffer[i], pubKey);
             printf("%d : %lu :",i, &cryptedBuffer[i]);
-            char * buffer = base64_encode((const uchar*)&cryptedBuffer[i], sizeof(cryptedBuffer[i]), &_output_length);
-            printf("%s\n", buffer);
-            fwrite(buffer, 1, 12, fichier2);
-            free(buffer);
+            char * buffer2 = base64_encode((const uchar*)&cryptedBuffer[i], sizeof(cryptedBuffer[i]), &_output_length);
+            printf("%s\n", buffer2);
+            fwrite(buffer2, 1, 12, fichier2);
+            free(buffer2);
         }
         *output_length += _output_length;
     }
+    free(buffer);
     free(cryptedBuffer);
     fclose(fichier);
     fclose(fichier2);
@@ -41,6 +42,7 @@ void RSAunCryptFile(char *inFilename,char *outFilename,rsaKey_t privKey, int len
     }
     char * buffer =(char *)malloc(length*sizeof(char));
     uint64 cUnCrypt;
+    fgets(buffer, 13, fichier);
     while (!feof(fichier)){
         fgets(buffer, 13, fichier);
         printf("buffer = %s\n", buffer);
@@ -48,7 +50,9 @@ void RSAunCryptFile(char *inFilename,char *outFilename,rsaKey_t privKey, int len
         printf("%lu\n", cryptedBuffer);
         RSAdecrypt(&cUnCrypt, cryptedBuffer, privKey);
         fprintf(fichier2, "%c", (char)cUnCrypt);
+        free(cryptedBuffer);
     }
+    free(buffer);
     fclose(fichier);
     fclose(fichier2);
     fseek(fichier, 0, SEEK_SET);
