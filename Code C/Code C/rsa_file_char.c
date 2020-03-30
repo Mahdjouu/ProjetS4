@@ -44,13 +44,13 @@ void RSAunCryptFile(char *inFilename,char *outFilename,rsaKey_t privKey, int len
     uint64 cUnCrypt;
     fgets(buffer, 13, fichier);
     while (!feof(fichier)){
-        fgets(buffer, 13, fichier);
         printf("buffer = %s\n", buffer);
         uint64 * cryptedBuffer = base64_decode(buffer,12,&_length);
         printf("%lu\n", cryptedBuffer);
         RSAdecrypt(&cUnCrypt, cryptedBuffer, privKey);
         fprintf(fichier2, "%c", (char)cUnCrypt);
         free(cryptedBuffer);
+        fgets(buffer, 13, fichier);
     }
     free(buffer);
     fclose(fichier);
