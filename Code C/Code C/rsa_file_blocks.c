@@ -51,8 +51,8 @@ void RSAfile_decrypt(char *inFilename,char *outFilename,rsaKey_t privKey){
         temp = RSAdecrypt1BlockGmp(*cryptedBuffer, privKey);
         convertInt2uchar(temp, buffer);
         fprintf(fichier2, "%s", buffer);
-        fread(buffer2, 12, 1, fichier);
         free(cryptedBuffer);
+        fread(buffer2, 12, 1, fichier);
     }
     free(buffer2);
     free(buffer);
