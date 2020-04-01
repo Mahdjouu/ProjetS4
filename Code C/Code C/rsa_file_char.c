@@ -1,7 +1,5 @@
 #include "rsa_header.h"
 
-// #############
-
 void RSAcryptFile(char *inFilename, char *outFilename, rsaKey_t pubKey, int *output_length){
     FILE * fichier = fopen(inFilename, "r");
     FILE * fichier2 = fopen(outFilename, "w");
@@ -10,25 +8,25 @@ void RSAcryptFile(char *inFilename, char *outFilename, rsaKey_t pubKey, int *out
     size_t _output_length = (size_t)*output_length;
     uint64 *cryptedBuffer = (uint64 *)malloc(MAX_BUFFER*sizeof(uint64));
     printf("\nPhase cryptage : \n\n");
-    do{
+    while (!feof(fichier)){
         fgets(buffer, MAX_BUFFER, fichier);
         printf("phrase : %s\n", buffer);
         for (i = 0; buffer[i] != '\0'; i++){
             RSAcrypt((unsigned char*)&buffer[i], &cryptedBuffer[i], pubKey);
             printf("%d : %lu :",i, &cryptedBuffer[i]);
-            char * buffer = base64_encode((const uchar*)&cryptedBuffer[i], sizeof(cryptedBuffer[i]), &_output_length);
-            printf("%s\n", buffer);
-            fwrite(buffer, 1, 12, fichier2);
+            char * buffer2 = base64_encode((const uchar*)&cryptedBuffer[i], sizeof(cryptedBuffer[i]), &_output_length);
+            printf("%s\n", buffer2);
+            fwrite(buffer2, 1, 12, fichier2);
+            free(buffer2);
         }
-        //free(buffer);
-        //free(cryptedBuffer);
         *output_length += _output_length;
-    }while (!feof(fichier));
-    ;
+    }
+    free(buffer);
+    free(cryptedBuffer);
+    fclose(fichier);
+    fclose(fichier2);
     fseek(fichier, 0, SEEK_SET);
     fseek(fichier2, 0, SEEK_SET);
-    fclose(fichier);
-    fclose(fichier2)
 }
 
 
@@ -36,29 +34,27 @@ void RSAunCryptFile(char *inFilename,char *outFilename,rsaKey_t privKey, int len
     FILE * fichier = NULL;
     FILE * fichier2 = NULL;
     size_t _length = (size_t)length;
-    if ((fichier = fopen(inFilename, "rb")) == NULL){
+    if ((fichier = fopen(inFilename, "r")) == NULL){
         fprintf(stderr, "Erreur ouverture du fichier %s.\n", inFilename);
     }
-    if ((fichier2 = fopen(outFilename, "wb")) == NULL){
+    if ((fichier2 = fopen(outFilename, "w")) == NULL){
         fprintf(stderr, "Erreur ouverture du fichier %s.\n", outFilename);
     }
     char * buffer =(char *)malloc(length*sizeof(char));
     uint64 cUnCrypt;
-    do{
-        fread(buffer, 1, _length, fichier);
-        printf("%s\n", buffer);
-        uint64 *cryptedBuffer = (uint64 *)base64_decode((const char *)buffer,_length,&_length);
+    fgets(buffer, 13, fichier);
+    while (!feof(fichier)){
+        printf("buffer = %s\n", buffer);
+        uint64 * cryptedBuffer = base64_decode(buffer,12,&_length);
         printf("%lu\n", cryptedBuffer);
-        //RSAdecrypt(&cUnCrypt, cryptedBuffer, privKey);
-        cUnCrypt = puissance_mod_n(cryptedBuffer,privKey.E,privKey.N);
-        //fprintf(fichier2, "%c\n", (char)cUnCrypt);
-        int * cDecrypt = &cUnCrypt;
-        fwrite(cDecrypt, 1, 1, fichier2);
+        RSAdecrypt(&cUnCrypt, cryptedBuffer, privKey);
+        fprintf(fichier2, "%c", (char)cUnCrypt);
         free(cryptedBuffer);
-    }while (!feof(fichier));
-
-    fseek(fichier, 0, SEEK_SET);
-    fseek(fichier2, 0, SEEK_SET);
+        fgets(buffer, 13, fichier);
+    }
+    free(buffer);
     fclose(fichier);
     fclose(fichier2);
+    fseek(fichier, 0, SEEK_SET);
+    fseek(fichier2, 0, SEEK_SET);
 }
