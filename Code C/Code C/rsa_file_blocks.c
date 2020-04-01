@@ -19,17 +19,19 @@ uint64 RSAdecrypt1BlockGmp(uint64 blockInt, rsaKey_t privKey){
 void RSAfile_crypt(char *inFilename,char *outFilename, rsaKey_t pubKey){
     FILE * fichier = fopen(inFilename, "r");
     FILE * fichier2 = fopen(outFilename, "w");
-    uchar buffer[5];
+    uchar * buffer = (uchar*)malloc(BLOCK_SIZE*sizeof(uchar));
     uint64 cryptedBuffer;
     uint temp;
-    fgets((char *)buffer, 5, fichier);
+    size_t _output_length;
     do{
-        printf("buffer = %s\n", buffer);
+        fgets(buffer, BLOCK_SIZE, fichier);
         temp = convert_4byte2int(buffer);
         cryptedBuffer = RSAcrypt1BlockGmp(temp, pubKey);
-        fprintf(fichier2, "%lu\n", cryptedBuffer);
-        fgets((char *)buffer, 5, fichier);
+        char * buffer2 = base64_encode(&cryptedBuffer,sizeof(uint64),&_output_length);
+        fprintf(fichier2, "%s", buffer2);
+        free(buffer2);
     }while (!feof(fichier));
+    free(buffer);
     fseek(fichier, 0, SEEK_SET);
     fseek(fichier2, 0, SEEK_SET);
     fclose(fichier);
@@ -39,16 +41,21 @@ void RSAfile_crypt(char *inFilename,char *outFilename, rsaKey_t pubKey){
 void RSAfile_decrypt(char *inFilename,char *outFilename,rsaKey_t privKey){
     FILE * fichier = fopen(inFilename, "r");
     FILE * fichier2 = fopen(outFilename, "w");
-    uchar buffer[5];
-    uint64 cryptedBuffer;
+    uchar *buffer = (uchar*)malloc(BLOCK_SIZE*sizeof(uchar));
     uint temp;
-    fscanf(fichier, "%lu", &cryptedBuffer);
-    do{
-        temp = RSAdecrypt1BlockGmp(cryptedBuffer, privKey);
+    size_t output_length;
+    char * buffer2 = malloc(12);
+    fread(buffer2, 12, 1, fichier);
+    while (!feof(fichier)){
+        uint64 * cryptedBuffer = (uint64 *)base64_decode(buffer2, 12, &output_length);
+        temp = RSAdecrypt1BlockGmp(*cryptedBuffer, privKey);
         convertInt2uchar(temp, buffer);
         fprintf(fichier2, "%s", buffer);
-        fscanf(fichier, "%lu", &cryptedBuffer);
-    }while (!feof(fichier));
+        free(cryptedBuffer);
+        fread(buffer2, 12, 1, fichier);
+    }
+    free(buffer2);
+    free(buffer);
     fclose(fichier);
     fclose(fichier2);
     fseek(fichier, 0, SEEK_SET);
