@@ -2,24 +2,27 @@
 
 void interpreteur_commande(){
     int nbMots;
-    char ** commande = (char**)malloc(4*sizeof(char*));
-    char * temp = (char*)malloc(40*sizeof(char));
+    char ** commande[4];
+    char * temp[40];
     printf("> ");
-    scanf("%[^\n]", temp);
+    scanf(" %[^\n]", temp);
     nbMots = cut_in_words(temp, commande);
     while ((strcmp(commande[0],"quit"))){
+        printf("> ");
+        for (int i = 0; i < nbMots; i++){
+            printf("%s ", commande[i]);
+        }
+        printf("en cours...\n");
         printf("> Instruction finit\n");
         printf("> On passe à la prochaine instruction...\n");
-        for (int i = 0; i <= nbMots; i++){
+        for (int i = 0; i < nbMots; i++){
             free(commande[i]);
         }
-        printf("> ");
-        scanf("%[^\n]", temp);
+        fflush(stdout);
+        printf("\n> ");
+        scanf(" %[^\n]", temp);
         nbMots = cut_in_words(temp, commande);
     }
-    free(commande[0]);
-    free(commande);
-    free(temp);
 }
 
 int cut_in_words(const char * source, char ** dest){
@@ -38,6 +41,9 @@ int cut_in_words(const char * source, char ** dest){
             dest[a] = (char*)malloc(10*sizeof(char));
         }
     }
-    printf("\n");
+    if (dest[a][e] == '\n'){
+
+    }
+    a++;
     return a;
 }
