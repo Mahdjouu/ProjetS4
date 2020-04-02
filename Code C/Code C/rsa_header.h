@@ -133,5 +133,6 @@ void interpreteur_commande();
 int cut_in_words(const char * source, char ** dest);
 void list_keys(List * l, int nb_arg, int id_search);
 void new_keys(List * l, int keyId, int type);
+void rm_keys(List * l, int keyId);
 #endif
 

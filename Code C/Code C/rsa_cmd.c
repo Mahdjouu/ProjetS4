@@ -20,10 +20,18 @@ void interpreteur_commande(){
         }
 
         // ######### RMKEYS #########
+        if (strcmp(commande[0], "rmkeys") == 0){
+            if (nbMots == 2){
+                rm_keys(listkeys, atoi(commande[1]));
+            }
+            else{
+                fprintf(stderr, " Usage : rmkeys <keyid>\n");
+            }
+        }
 
 
         // ######### NEWKEYS #########
-        if (!strcmp(commande[0], "newkeys")){
+        if (strcmp(commande[0], "newkeys") == 0){
             if (nbMots == 3){
                 new_keys(listkeys, atoi(commande[1]), atoi(commande[2]));
             }

@@ -52,14 +52,14 @@ void list_delete(ptrList * l){
 }
 
 void node_delete(ptrList * l, int delete_id){
-    Node * temp1 = l;
-    Node * temp2 = l;
-
+    Node * temp1 = (*l)->sentinel->next;
+    Node * temp2 = (*l)->sentinel->next;
     if(!list_is_empty(l)){
         while(temp1->keyid != delete_id){
             temp1 = temp1->next;
+            
         }
-        while(temp2->next != delete_id){
+        while(temp2->next != temp1){
             temp2 = temp2->next;
         }
         temp2->next = temp1->next;
@@ -115,4 +115,8 @@ void new_keys(List * l, int keyId, int type){
     keyPair_t newKeyPair;
     genKeysRabin(&newKeyPair.pubKey,&newKeyPair.privKey);
     list_push_front(l, keyId, type, newKeyPair);
+}
+
+void rm_keys(List * l, int keyId){
+    node_delete(&l, keyId);
 }
