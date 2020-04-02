@@ -6,15 +6,33 @@ void interpreteur_commande(){
     char * temp[40];
     printf("> ");
     scanf(" %[^\n]", temp);
+    List *listkeys = list_create();
     nbMots = cut_in_words(temp, commande);
     while ((strcmp(commande[0],"quit"))){
-        printf("> ");
-        for (int i = 0; i < nbMots; i++){
-            printf("%s ", commande[i]);
+        if (!strcmp(commande[0], "listkeys")){
+            if(!commande[1]){
+
+            }
         }
-        printf("en cours...\n");
-        printf("> Instruction finit\n");
-        printf("> On passe à la prochaine instruction...\n");
+
+        if (!strcmp(commande[0], "newkeys")){
+            int keyid;
+            int type;
+            keyid = commande[1];
+            type = commande[2];
+            keyPair_t keyPair;
+            genKeysRabin(&keyPair.pubKey, &keyPair.privKey);
+            printKeyPair(keyPair);
+        }
+
+
+
+
+
+
+
+
+        // ######### On passe à la commande suivante ###########
         for (int i = 0; i < nbMots; i++){
             free(commande[i]);
         }

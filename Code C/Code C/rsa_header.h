@@ -24,6 +24,9 @@
 #define MAX_STR 10 //
 #define MAX_BUFFER 512
 
+#define CHIFFREMENT 47
+#define SIGNATURE 48
+
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define MAXI(a,b) (((a)>(b))?(a):(b))
 
@@ -51,6 +54,18 @@ typedef struct keyPair_s {
 	rsaKey_t pubKey; // (C,N)
 	rsaKey_t privKey; //(U,N)
 } keyPair_t;
+
+// struct pour la gestion des clefs avec l'interpréteur de commande
+
+typedef struct s_List List;
+typedef struct node_Keys Node;
+typedef List * ptrList;
+typedef int(*SimpleFunctor)(int, int);
+
+// Fonction pour utiliser les listes
+
+List *list_create();
+List *list_push_back(List *l, int identificateur, int type, keyPair_t keyPair) ;
 
 // prototypes de sp
 void erreur(char* msg); // pour afficher les msg d'erreurs

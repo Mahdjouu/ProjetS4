@@ -202,8 +202,8 @@ void genKeysRabin(rsaKey_t *pubKey,rsaKey_t *privKey){
   uint64 num1 = genereUintRabin(2000,&cpt1);
   uint64 num2 = genereUintRabin(2000,&cpt2);
 
-  fprintf(logfp,"num1=%lu, cpt1=%d\n",num1,cpt1);
-  fprintf(logfp,"num2=%lu, cpt2=%d\n",num2,cpt2);
+  //fprintf(logfp,"num1=%lu, cpt1=%d\n",num1,cpt1);
+  //fprintf(logfp,"num2=%lu, cpt2=%d\n",num2,cpt2);
   uint64 N = num1*num2;
   uint64 M = (num1-1)*(num2-1);
 
@@ -216,7 +216,7 @@ void genKeysRabin(rsaKey_t *pubKey,rsaKey_t *privKey){
   long U,V;
   long res = bezoutRSA(C,M,&U,&V);
   assert(2<U && U<M);
-  fprintf(logfp,"N=%lu, M=%lu, C=%u, U=%ld, V=%ld\n",N,M,C,U,V);
+  //fprintf(logfp,"N=%lu, M=%lu, C=%u, U=%ld, V=%ld\n",N,M,C,U,V);
   res = 0;
   pubKey->E = C;
   pubKey->N = N;
