@@ -22,11 +22,11 @@ List *list_create(){
     return l;
 }
 
-List * list_push_front(List * l, int keyid, int type, keyPair_t keypair) {
+List *list_push_front(List *l, int keyId, int type, keyPair_t keyPair){
     Node * n = malloc(sizeof(struct node_Keys));
-    n->keyid = keyid;
+    n->keyid = keyId;
     n->type = type;
-    n->keyPair = keypair;
+    n->keyPair = keyPair;
     n->previous = l->sentinel;
   	n->next = l->sentinel->next;
   	n->next->previous = n;
@@ -73,7 +73,7 @@ void printList(int i, int j){
     if(j == CHIFFREMENT){
         strcpy(type_key, "CHIFFREMENT");
     }
-    else{
+    else if (j == SIGNATURE){
         strcpy(type_key, "SIGNATURE");
     }
     printf("TYPE: %s\n", type_key);
@@ -83,4 +83,36 @@ List * list_map(List *l, SimpleFunctor f) {
 	for(Node * n = l->sentinel->next; n != l->sentinel; n = n->next)
 		f(n->keyid, n->type);
 	return l;
+}
+
+Node *list_id(List * l, int id_search){
+    Node * temp = l->sentinel->next;
+    while(temp->keyid != id_search){
+        temp = temp->next;
+    }
+    return temp;
+}
+
+void list_keys(List * l, int nb_arg, int id_search){
+    if(list_is_empty(l)){
+        printf("Attention la liste ne contient pas de cle.");
+    }
+    else{
+        if(nb_arg == 0){
+            list_map(l,&printList);
+        }
+        else{
+            Node * n = l->sentinel->next;
+            while(n->keyid != id_search){
+                n = n->next;
+            }
+            printList(n->keyid, n->type);
+        }
+    }
+}
+
+void new_keys(List * l, int keyId, int type){
+    keyPair_t newKeyPair;
+    genKeysRabin(&newKeyPair.pubKey,&newKeyPair.privKey);
+    list_push_front(l, keyId, type, newKeyPair);
 }

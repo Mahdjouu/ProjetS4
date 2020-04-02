@@ -60,12 +60,17 @@ typedef struct keyPair_s {
 typedef struct s_List List;
 typedef struct node_Keys Node;
 typedef List * ptrList;
-typedef int(*SimpleFunctor)(int, int);
+typedef void(*SimpleFunctor)(int, int);
 
 // Fonction pour utiliser les listes
 
 List *list_create();
-List *list_push_back(List *l, int identificateur, int type, keyPair_t keyPair) ;
+List *list_push_front(List *l, int identificateur, int type, keyPair_t keyPair);
+bool list_is_empty(List *l);
+void list_delete(ptrList * l);
+void node_delete(ptrList * l, int delete_id);
+void printList(int i, int j);
+List * list_map(List *l, SimpleFunctor f);
 
 // prototypes de sp
 void erreur(char* msg); // pour afficher les msg d'erreurs
@@ -126,5 +131,7 @@ void puissance_mod_n_gmp(mpz_t res,uint64 a, uint64 e, uint64 n); // puis mod av
 
 void interpreteur_commande();
 int cut_in_words(const char * source, char ** dest);
+void list_keys(List * l, int nb_arg, int id_search);
+void new_keys(List * l, int keyId, int type);
 #endif
 

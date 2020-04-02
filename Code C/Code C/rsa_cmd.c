@@ -2,53 +2,54 @@
 
 void interpreteur_commande(){
     int nbMots;
-    char ** commande[4];
-    char * temp[40];
+    char * commande[4];
+    char temp[40];
     printf("> ");
-    scanf(" %[^\n]", temp);
+    fgets(temp, "%[^\n]", stdin);
     List *listkeys = list_create();
     nbMots = cut_in_words(temp, commande);
-    while ((strcmp(commande[0],"quit"))){
-        if (!strcmp(commande[0], "listkeys")){
-            if(!commande[1]){
-
+    while (strcmp(commande[0],"quit") != 0){
+        // ######### LIST KEYS #########
+        if (strcmp(commande[0], "listkeys") == 0){
+            if (nbMots == 2){
+                list_keys(listkeys, 1, atoi(commande[1]));
+            }
+            else{
+                list_keys(listkeys, 0, 0);
             }
         }
 
+        // ######### RMKEYS #########
+
+
+        // ######### NEWKEYS #########
         if (!strcmp(commande[0], "newkeys")){
-            int keyid;
-            int type;
-            keyid = commande[1];
-            type = commande[2];
-            keyPair_t keyPair;
-            genKeysRabin(&keyPair.pubKey, &keyPair.privKey);
-            printKeyPair(keyPair);
+            if (nbMots == 3){
+                new_keys(listkeys, atoi(commande[1]), atoi(commande[2]));
+            }
+            else {
+                fprintf(stderr, "Usage : newkeys <keyid> <type>\n");
+            }
         }
-
-
-
-
-
-
-
 
         // ######### On passe à la commande suivante ###########
         for (int i = 0; i < nbMots; i++){
+            commande[i] = NULL;
             free(commande[i]);
         }
-        fflush(stdout);
+        // fflush(stdout);
         printf("\n> ");
-        scanf(" %[^\n]", temp);
+        fgets(temp, "%[^\n]", stdin);
         nbMots = cut_in_words(temp, commande);
     }
 }
 
 int cut_in_words(const char * source, char ** dest){
-    int i;
+    int i = 0;
     int e = 0;
     int a = 0;
     dest[a] = (char*)malloc(10*sizeof(char));
-    for (i = 0; source[i] != '\0'; i++){
+    while (source[i] != '\n'){
         if (source[i] != ' '){
             dest[a][e] = source[i];
             e++;
@@ -58,9 +59,7 @@ int cut_in_words(const char * source, char ** dest){
             a = a + 1;
             dest[a] = (char*)malloc(10*sizeof(char));
         }
-    }
-    if (dest[a][e] == '\n'){
-
+        i++;
     }
     a++;
     return a;
