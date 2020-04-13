@@ -153,5 +153,8 @@ void save(List *l, SimpleFunctor2 f, char * save);
 void saveList(Node * n, FILE * fic);
 void savePub(List * l, int id, char * savePub);
 void load(List * l, char * filename);
+bool isNumber(char * nombreATester);
+void show(List * l, int id, int nbarg, char ** arg);
+bool isType(char * type);
 #endif
 

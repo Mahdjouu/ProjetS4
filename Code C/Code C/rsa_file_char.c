@@ -1,8 +1,18 @@
 #include "rsa_header.h"
 
 void RSAcryptFile(char *inFilename, char *outFilename, rsaKey_t pubKey, int *output_length){
-    FILE * fichier = fopen(inFilename, "r");
-    FILE * fichier2 = fopen(outFilename, "w");
+    FILE * fichier = NULL;
+    FILE * fichier2 = NULL;
+    if ((fichier = fopen(inFilename, "r")) == NULL){
+        fprintf(stderr, "Erreur ouverture du fichier %s.\n", inFilename);
+        fclose(fichier);
+        return;
+    }
+    if ((fichier2 = fopen(outFilename, "w")) == NULL){
+        fprintf(stderr, "Erreur ouverture du fichier %s.\n", outFilename);
+        fclose(fichier2);
+        return;
+    }
     char *buffer = (char*)malloc(MAX_BUFFER*sizeof(char));
     int i = 0;
     size_t _output_length = (size_t)*output_length;
@@ -32,9 +42,13 @@ void RSAunCryptFile(char *inFilename,char *outFilename,rsaKey_t privKey, int len
     size_t _length = (size_t)length;
     if ((fichier = fopen(inFilename, "r")) == NULL){
         fprintf(stderr, "Erreur ouverture du fichier %s.\n", inFilename);
+        fclose(fichier);
+        return;
     }
     if ((fichier2 = fopen(outFilename, "w")) == NULL){
         fprintf(stderr, "Erreur ouverture du fichier %s.\n", outFilename);
+        fclose(fichier2);
+       return;
     }
     char * buffer =(char *)malloc(length*sizeof(char));
     uint64 cUnCrypt;

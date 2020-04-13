@@ -112,9 +112,10 @@ void save(List *l, SimpleFunctor2 f, char * save) {
     FILE * fic = NULL;
     if ((fic = fopen(save, "w")) == NULL){
         fprintf(stderr, "Erreur ouverture du fichier %s.\n", save);
-        exit(1);
+        fclose(fic);
+        return;
     }
-    for(Node * n = l->sentinel->next; n != l->sentinel; n = n->next){
+    for(Node * n = l->sentinel->previous; n != l->sentinel; n = n->previous){
         f(n, fic);
     }
     fclose(fic);
@@ -138,8 +139,9 @@ void savePub(List * l, int id, char * savePub){
     char * pubN;
     int output_length;
     if((fic = fopen(savePub, "w")) == NULL){
-        fprintf(stderr, "Impossible d'ouvrir le fichier en écriture\n");
-        exit(1);
+        fprintf(stderr, "Impossible d'ouvrir le fichier %s en écriture\n", savePub);
+        fclose(fic);
+        return;
     }
     Node * n = list_id(l,id);
     uint64 temp1 = n->keyPair.pubKey.E;
@@ -154,8 +156,6 @@ void savePub(List * l, int id, char * savePub){
     fclose(fic);
 }
 
-//List *list_push_front(List *l, int keyId, int type, keyPair_t keyPair)
-
 void load(List * l, char * filename){
     FILE * fichier = NULL;
     char * type = (char*)malloc(MAX_BUFFER*sizeof(char));
@@ -163,7 +163,8 @@ void load(List * l, char * filename){
     int id = 0;
     if ((fichier = fopen(filename, "r")) == NULL){
         fprintf(stderr, "Impossible d'ouvrir le fichier %s avec la fonction load.\n", filename);
-        exit(45);
+        fclose(fichier);
+        return;
     }
     while(!feof(fichier)){
         fscanf(fichier, "ID: %d\n", &id);
@@ -177,4 +178,42 @@ void load(List * l, char * filename){
             l = list_push_front(l, id, SIGNATURE, keyPair);
         }
     }
+}
+
+void show(List * l, int id, int nbarg, char ** arg){
+    Node * n = list_id(l, id);
+    char * pubE ;
+    char * pubN;
+    char * privE;
+    char * privN;
+    int output_length;
+    uint64 temp1 = n->keyPair.pubKey.E;
+    uint64 temp2 = n->keyPair.pubKey.N;
+    uint64 temp3 = n->keyPair.privKey.E;
+    uint64 temp4 = n->keyPair.privKey.N;
+    pubE = base64_encode((const uchar *)&temp1, sizeof(temp1), &output_length);
+    pubN = base64_encode((const uchar *)&temp2, sizeof(temp2), &output_length);
+    privE = base64_encode((const uchar *)&temp3, sizeof(temp3), &output_length);
+    privN = base64_encode((const uchar *)&temp4, sizeof(temp4), &output_length);
+
+    if(nbarg == 2 || nbarg == 4){
+        printf("PUBKEY: (%s , %s)\n", pubE, pubN);
+        printf("PRIVKEY: (%s , %s)\n\n", privE, privN);
+    }
+    else{
+        if(strcmp(arg[2],"pub") == 0){
+            printf("PUBKEY: (%s , %s)\n\n", pubE, pubN);
+        }
+        else if(strcmp(arg[2],"priv") == 0){
+            printf("PRIVKEY: (%s , %s)\n\n", privE, privN);
+        }
+        else{
+            fprintf(stderr, "Usage : show <keyid> [\"pub\"] [\"priv\"]\nkeyid : entier (clé)\n");
+            fprintf(stderr, "pub : argument pour afficher la clé publique\npriv : argument pour afficher la clé privé\n");
+        }
+    }
+    free(pubE);
+    free(pubN);
+    free(privE);
+    free(privN);
 }
