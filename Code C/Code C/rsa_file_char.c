@@ -7,15 +7,11 @@ void RSAcryptFile(char *inFilename, char *outFilename, rsaKey_t pubKey, int *out
     int i = 0;
     size_t _output_length = (size_t)*output_length;
     uint64 *cryptedBuffer = (uint64 *)malloc(MAX_BUFFER*sizeof(uint64));
-    printf("\nPhase cryptage : \n\n");
     while (!feof(fichier)){
         fgets(buffer, MAX_BUFFER, fichier);
-        printf("phrase : %s\n", buffer);
         for (i = 0; buffer[i] != '\0'; i++){
             RSAcrypt((unsigned char*)&buffer[i], &cryptedBuffer[i], pubKey);
-            printf("%d : %lu :",i, &cryptedBuffer[i]);
             char * buffer2 = base64_encode((const uchar*)&cryptedBuffer[i], sizeof(cryptedBuffer[i]), &_output_length);
-            printf("%s\n", buffer2);
             fwrite(buffer2, 1, 12, fichier2);
             free(buffer2);
         }
@@ -44,9 +40,7 @@ void RSAunCryptFile(char *inFilename,char *outFilename,rsaKey_t privKey, int len
     uint64 cUnCrypt;
     fgets(buffer, 13, fichier);
     while (!feof(fichier)){
-        printf("buffer = %s\n", buffer);
         uint64 * cryptedBuffer = base64_decode(buffer,12,&_length);
-        printf("%lu\n", cryptedBuffer);
         RSAdecrypt(&cUnCrypt, cryptedBuffer, privKey);
         fprintf(fichier2, "%c", (char)cUnCrypt);
         free(cryptedBuffer);

@@ -38,7 +38,7 @@ void RSAfile_crypt(char *inFilename,char *outFilename, rsaKey_t pubKey){
     fclose(fichier2);
 }
 
-void RSAfile_decrypt(char *inFilename,char *outFilename,rsaKey_t privKey){
+void RSAfile_decrypt(char *inFilename, char *outFilename,rsaKey_t privKey){
     FILE * fichier = fopen(inFilename, "r");
     FILE * fichier2 = fopen(outFilename, "w");
     uchar *buffer = (uchar*)malloc(BLOCK_SIZE*sizeof(uchar));

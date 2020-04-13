@@ -57,10 +57,24 @@ typedef struct keyPair_s {
 
 // struct pour la gestion des clefs avec l'interpréteur de commande
 
+struct s_List{
+	struct node_Keys *sentinel;
+	int size;
+};
+
+struct node_Keys{
+	int keyid;
+	int type; // CHIFFREMENT ou SIGNATURE
+	keyPair_t keyPair;
+	struct node_Keys *next;
+	struct node_Keys *previous;
+};
+
 typedef struct s_List List;
 typedef struct node_Keys Node;
 typedef List * ptrList;
 typedef void(*SimpleFunctor)(int, int);
+typedef void(*SimpleFunctor2)(Node *,FILE *);
 
 // Fonction pour utiliser les listes
 
@@ -71,6 +85,7 @@ void list_delete(ptrList * l);
 void node_delete(ptrList * l, int delete_id);
 void printList(int i, int j);
 List * list_map(List *l, SimpleFunctor f);
+Node *list_id(List * l, int id_search);
 
 // prototypes de sp
 void erreur(char* msg); // pour afficher les msg d'erreurs
@@ -134,5 +149,9 @@ int cut_in_words(const char * source, char ** dest);
 void list_keys(List * l, int nb_arg, int id_search);
 void new_keys(List * l, int keyId, int type);
 void rm_keys(List * l, int keyId);
+void save(List *l, SimpleFunctor2 f, char * save);
+void saveList(Node * n, FILE * fic);
+void savePub(List * l, int id, char * savePub);
+void load(List * l, char * filename);
 #endif
 

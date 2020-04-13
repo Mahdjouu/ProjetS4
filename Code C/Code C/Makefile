@@ -2,7 +2,7 @@
 CC = gcc
 CFLAGS = -Wall -std=c99
 LDFLAGS = -lgmp
-OBJFILES = phase3.o list.o rsa_cmd.o rsa_file_blocks.o rsa_tools_gmp.o rsa_tools.o bezout.o other_base64.o rsa_print_tools.o int2char.o crypt_decrypt.o Sha-256/Sha-256/sha256_utils.o Sha-256/Sha-256/sha256.o
+OBJFILES = phase3.o list.o rsa_cmd.o rsa_file_blocks.o rsa_file_char.o rsa_tools_gmp.o rsa_tools.o bezout.o other_base64.o rsa_print_tools.o int2char.o crypt_decrypt.o Sha-256/Sha-256/sha256_utils.o Sha-256/Sha-256/sha256.o
 TARGET = phase3
 
 all: $(TARGET)
