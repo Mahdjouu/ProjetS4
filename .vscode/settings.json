@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "phase2-2.C": "cpp"
+        "phase2-2.C": "cpp",
+        "rsa_header.h": "c"
     }
 }

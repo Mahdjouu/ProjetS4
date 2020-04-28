@@ -234,3 +234,55 @@ void inputKey(uint64 E,uint64 N,rsaKey_t *key){
   key->E = E;
   key->N = N;
 }
+
+uint genereUintRabin2(uint min,uint max,int *cpt){
+  /// \brief fournit un nombre premier vérifié avec le test de rabin
+  /// \param[in] min, max : nombre min et max pour le calcul
+  /// \param[out] cpt : le nombre de tests
+  /// \returns : le nombre premier
+  uint num;
+  *cpt=1;
+  int a=2;
+  do{
+    num = random_uint(min,max);
+  } while (num%2!=1);
+
+  while (!rabin(a,num) && num<max){
+    (*cpt)++;
+    num=num+2;
+  }
+  return num;
+}
+
+void genKeysRabin2(uint min, uint max, rsaKey_t *pubKey,rsaKey_t *privKey){
+  /// \brief génère une paire de clefs
+  /// \param[in] min nombre plancher pour les premiers
+  /// \param[out] max nombre plafond pour les premiers
+  /// \param[out] pubKey : clef publique
+  /// \param[out] privKey : clef privée
+  ///
+  int cpt1,cpt2;
+  uint64 num1 = genereUintRabin2(min,max,&cpt1);
+  uint64 num2 = genereUintRabin2(min,max,&cpt2);
+
+  fprintf(logfp,"num1=%lu, cpt1=%d\n",num1,cpt1);
+  fprintf(logfp,"num2=%lu, cpt2=%d\n",num2,cpt2);
+  uint64 N = num1*num2;
+  uint64 M = (num1-1)*(num2-1);
+
+  uint C = 2;
+  // recherche d'un nombre premier avec M
+  while (pgcdFast(C,M)!=1 && C<M){
+    C++;
+  }
+  assert(C<M);
+  long U,V;
+  long res = bezoutRSA(C,M,&U,&V);
+  assert(2<U && U<M);
+  fprintf(logfp,"N=%lu, M=%lu, C=%u, U=%ld, V=%ld\n",N,M,C,U,V);
+
+  pubKey->E = C;
+  pubKey->N = N;
+  privKey->E = U;
+  privKey->N = N;
+}

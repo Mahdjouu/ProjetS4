@@ -3,12 +3,14 @@
 void interpreteur_commande(){
     int nbMots;
     char * commande[4];
-    char temp[100];
-    printf("> ");
+    char * temp = NULL;
     int length;
-    fgets(temp, "%[^\n]", stdin);
+    char userenv[100];
+    while(!saisie_mdp());
+    sprintf(userenv, "@%s> ", getenv("USER"));
+    temp = readline(userenv);
     List *listkeys = list_create();
-    nbMots = cut_in_words(temp, commande);
+    nbMots = cut_in_words((const char *)temp, commande);
     while (strcmp(commande[0],"quit") != 0){
         // ######### LIST KEYS #########
         if (strcmp(commande[0], "listkeys") == 0){
@@ -65,7 +67,6 @@ void interpreteur_commande(){
         }
 
         // ######### CRYPT #########
-
         if (strcmp(commande[0], "crypt") == 0){
             if(nbMots == 4){
                 if (isNumber(commande[3])){
@@ -156,8 +157,14 @@ void interpreteur_commande(){
 
         // ######### SHOW #########
         if (strcmp(commande[0], "show") == 0){
-            if (isNumber(commande[1])){
-                show(listkeys, atoi(commande[1]), nbMots, commande);
+            if (commande[1] != NULL){
+                if (isNumber(commande[1])){
+                    show(listkeys, atoi(commande[1]), nbMots, commande);
+                }
+                else{
+                    fprintf(stderr, "Usage : show <keyid> [\"pub\"] [\"priv\"]\nkeyid : entier (clé)\n");
+                    fprintf(stderr, "pub : argument pour afficher la clé publique\npriv : argument pour afficher la clé privé\n");
+                }
             }
             else{
                 fprintf(stderr, "Usage : show <keyid> [\"pub\"] [\"priv\"]\nkeyid : entier (clé)\n");
@@ -165,16 +172,70 @@ void interpreteur_commande(){
             }
         }
 
+        // ######### SIGNTEXT #########
+
+        if (strcmp(commande[0], "signtext") == 0){
+            if (nbMots == 4){
+                if(isNumber(commande[2])){
+                    Node *myKey = list_id(listkeys,atoi(commande[2]));
+                    if(myKey->type == SIGNATURE){
+                        signtext(commande[1], myKey->keyPair.privKey, commande[3]);
+                    }
+                    else{
+                        fprintf(stderr, "Usage : signtext <filein> <keyid> <fileout>\nfilein : nom du fichier en entrée\nkeyid : entier (doit être une clé de signature)\n");
+                        fprintf(stderr, "fileout : fichier de sortie\n");
+                    }
+                }
+                else{
+                    fprintf(stderr, "Usage : signtext <filein> <keyid> <fileout>\nfilein : nom du fichier en entrée\nkeyid : entier (doit être une clé de signature)\n");
+                    fprintf(stderr, "fileout : fichier de sortie\n");
+                }
+            }
+            else{
+                fprintf(stderr, "Usage : signtext <filein> <keyid> <fileout>\nfilein : nom du fichier en entrée\nkeyid : entier (doit être une clé de signature)\n");
+                fprintf(stderr, "fileout : fichier de sortie\n");
+            }
+        }
+
+        // ######### VERIFYSIGN #########
+
+        if (strcmp(commande[0], "verifysign") == 0){
+            if (nbMots == 4){
+                if (isNumber(commande[3])){
+                    Node *myKey = list_id(listkeys,atoi(commande[3]));
+                    if (myKey->type == SIGNATURE){
+                        verifysign(commande[1], commande[2], myKey->keyPair.pubKey);
+                    }
+                    else{
+                        fprintf(stderr, "Usage : verifysign <filein> <filesign> <keyid>\nfilein : Nom du fichier en entrée\n");
+                        fprintf(stderr, "filesign : Nom du fichier contenant la signature\nkeyid : entier (doit être une clé de signature)\n");
+                    }
+                }
+                else{
+                    fprintf(stderr, "Usage : verifysign <filein> <filesign> <keyid>\nfilein : Nom du fichier en entrée\n");
+                    fprintf(stderr, "filesign : Nom du fichier contenant la signature\nkeyid : entier (doit être une clé de signature)");
+                }
+            }
+            else{
+                fprintf(stderr, "Usage : verifysign <filein> <filesign> <keyid>\nfilein : Nom du fichier en entrée\n");
+                fprintf(stderr, "filesign : Nom du fichier contenant la signature\nkeyid : entier (doit être une clé de signature)");
+            }
+        }
+
         // ######### On passe à la commande suivante ###########
         for (int i = 0; i < nbMots; i++){
-            commande[i] = NULL;
             free(commande[i]);
+            commande[i] = NULL;
         }
-        // fflush(stdout);
-        printf("\n> ");
-        fgets(temp, "%[^\n]", stdin);
-        nbMots = cut_in_words(temp, commande);
+        add_history(temp);
+        free(temp);
+        temp = NULL;
+        fflush(stdout);
+        temp = readline(userenv);
+        nbMots = cut_in_words((const char *)temp, commande);
     }
+    free(temp);
+    temp = NULL;
 }
 
 int cut_in_words(const char * source, char ** dest){
@@ -182,7 +243,7 @@ int cut_in_words(const char * source, char ** dest){
     int e = 0;
     int a = 0;
     dest[a] = (char*)malloc(30*sizeof(char));
-    while (source[i] != '\n'){
+    while (source[i] != '\0'){
         if (source[i] != ' '){
             dest[a][e] = source[i];
             e++;

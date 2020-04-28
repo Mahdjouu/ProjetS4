@@ -82,7 +82,7 @@ Node *list_id(List * l, int id_search){
 
 void list_keys(List * l, int nb_arg, int id_search){
     if(list_is_empty(l)){
-        printf("Attention la liste ne contient pas de cle.");
+        printf("Attention la liste ne contient pas de cle.\n");
     }
     else{
         if(nb_arg == 0){
@@ -216,4 +216,19 @@ void show(List * l, int id, int nbarg, char ** arg){
     free(pubN);
     free(privE);
     free(privN);
+}
+
+void signtext(char * inFilename, rsaKey_t signKey, char * outFilename){
+    tabUint64_t * temp = signText(inFilename, signKey);
+    signatureDigest(temp, outFilename);
+}
+
+void verifysign(char * inFilename, char * inFileB64, rsaKey_t verifyKey){
+    tabUint64_t temp;
+    if(verifySignFileB64(inFilename, inFileB64, temp, verifyKey)){
+        printf("Le message est bien signé !\n");
+    }
+    else{
+        printf("Le message n'est pas bien signé !\n");
+    }
 }

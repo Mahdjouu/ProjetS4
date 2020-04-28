@@ -1,8 +1,10 @@
 /// \file rsa_header.h
 /// \author Vincent Dugat
 /// \date august 2019
+#define _POSIX_C_SOURCE 1
 #ifndef RSA_H
 #define RSA_H
+
 
 #include <stdio.h>
 #include <string.h>
@@ -10,8 +12,14 @@
 #include <stdbool.h>
 #include <assert.h>
 #include <time.h>
+#include <fcntl.h>
+#include <unistd.h>
 #include "Sha-256/Sha-256/sha256_utils.h"
 #include <gmp.h>
+#include <readline/readline.h>
+#include <readline/history.h>
+#include <editline/readline.h>
+
 
 #define MAX_U_INT 4294967296
 #define MAX_U_INT64 18446744073709551616
@@ -139,7 +147,7 @@ tabUint64_t * RSAunCryptUint64(tabUint64_t numMsgC,rsaKey_t privKey);
 // GMP
 void mersenneGmp(mpz_t resGmp,uint64 max,uint64 p); // ovni
 void printKeyPair(keyPair_t keyPair);
-char * verifySignText(char *inFilename,tabUint64_t cryptAr, rsaKey_t verifyKey);
+bool verifySignText(char *inFilename,tabUint64_t cryptAr, rsaKey_t verifyKey);
 void puissance_mod_n_gmp(mpz_t res,uint64 a, uint64 e, uint64 n); // puis mod avec gmp
 
 // RSA COMMANDE
@@ -156,5 +164,16 @@ void load(List * l, char * filename);
 bool isNumber(char * nombreATester);
 void show(List * l, int id, int nbarg, char ** arg);
 bool isType(char * type);
+int quelType(char * type);
+
+// SIGNATURE
+
+void text2sha(char * inFilename, char *shaStr);
+tabUint64_t * signText(char *inFilename,rsaKey_t signKey); 
+void signatureDigest(tabUint64_t * cryptedBuffer, char * filename);
+void signtext(char * inFilename, rsaKey_t signKey, char * outFilename);
+bool verifySignFileB64(char *inFileMsg,char * inFileSignB64,tabUint64_t cryptAr, rsaKey_t verifyKey); 
+void verifysign(char * inFilename, char * inFileB64, rsaKey_t verifyKey);
+bool saisie_mdp();
 #endif
 
